@@ -58,15 +58,28 @@ class WC_Integration_Sale_Category extends WC_Integration {
   /**
 	 * Assign/unassign the sale category after post meta was updated.
 	 */
-  public function assign_sale_category( $meta_id, $post_id, $meta_key, $meta_value ) {
-    if ( $meta_key != '_price' ) {
-      return; // do nothing, if the meta key is not _price
-    }
-    if ( wp_get_post_parent_id( $post_id ) ) {
-      return; // bail if this is a variation
-    }
-    $product = wc_get_product( $post_id );
-    if ( $product->is_on_sale() ) {
+  public function assign_sale_category( $meta_id, $post_id, $meta_key, $meta_value ) {		
+	$product = wc_get_product( $post_id );
+
+	if ( $product->is_type( 'variable' ) ) {
+		if ( $product->get_children() ) {
+			foreach ( $product->get_children() as $child_id ) {
+				$child_product = wc_get_product( $child_id );
+
+				if ( $is_on_sale = $child_product->is_on_sale() ) {
+					break;						
+				}
+			}
+		}
+	} else {
+		if ( $meta_key != '_price' ) {
+			return; // do nothing, if the meta key is not _price
+		}
+
+		$is_on_sale = $product->is_on_sale();
+	}
+
+    if ( $is_on_sale ) {
       // product is on sale, let's assign the sale category
       wp_set_object_terms( $post_id, $this->sale_category, 'product_cat', true );
     } else {
