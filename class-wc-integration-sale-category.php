@@ -58,7 +58,10 @@ class WC_Integration_Sale_Category extends WC_Integration {
   /**
 	 * Assign/unassign the sale category after post meta was updated.
 	 */
-  public function assign_sale_category( $meta_id, $post_id, $meta_key, $meta_value ) {		
+  public function assign_sale_category( $meta_id, $post_id, $meta_key, $meta_value ) {
+	if ( get_post_type($post_id) !== 'product' ) {
+		return;
+	}
 	$product = wc_get_product( $post_id );
 
 	if ( $product->is_type( 'variable' ) ) {
