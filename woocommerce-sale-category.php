@@ -5,7 +5,7 @@
  * Description: Automatically assign products on sale to a specified category
  * Author: Webikon (Juraj Kiss)
  * Author URI: https://twitter.com/jur4jk
- * Version: 0.1
+ * Version: 0.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
